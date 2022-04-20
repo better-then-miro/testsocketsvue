@@ -1,15 +1,35 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
+  <button v-on:click="goHome()">
+    Home
+  </button>
   <HelloWorld msg="Welcome to Your Vue.js App"/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import { useSocketIo} from "./service/socket.js";
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      socket : null
+    }
+  },
+
+  mounted() {
+    this.socket = useSocketIo();
+    //this.socket.emit("connect2");
+    console.log("mounted");
+    this.socket.on('my_response', msg => {
+      console.log(msg);
+      console.log("msg");
+    })
+  },
+
+  methods: {
+    goHome(){
+      console.log(this.socket);
+      this.socket.emit("my_event", { data : 'value'});
+    }
   }
 }
 </script>
